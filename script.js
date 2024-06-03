@@ -43,7 +43,7 @@ const gameBoard = (() => {
 
 // The working state of the game / main functions
 const gameController = (function() {
-    let isOver = false;
+    // let isOver = false;
 
     const playerX = Player("kermit", "X");
     const playerO = Player("ian", "O");
@@ -53,33 +53,39 @@ const gameController = (function() {
     const solutions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8]
                        [0, 3, 6], [1, 4, 7], [2, 4, 6], [2, 5, 8]]
 
-    const checkBoard = (player) => {
-        const symbol = player.getSymbol();
+    const checkBoard = (symbol) => {
 
         for (let array in solutions) {
             const win = array.reduce((prev, index) => {
-                return gameBoard.getField(index) === symbol && prev
+                return gameBoard.getField(index) === symbol && prev;
             }, true);
             if (win) {
-                isOver = true;
+                // isOver = true;
+                console.log(symbol, "Won")
             }
         }
-        isOver  = false;
+        // console.log("No one has won yet")
+        // isOver = false;
     };
 
     const getIsOver = () => isOver;
 
     const getCurrSymbol = () => currentSymbol;
+    
+    const setCurrSymbol = (symbol) => {
+        currentSymbol = symbol;
+    }; 
 
     const reset = () => {
         gameBoard.reset();
         displayController.resetDisplay();
-        isOver = false;
+        currentSymbol = playerX.getSymbol()
+        // isOver = false;
         gameBoard.printGrid();
     };
 
-    return {solutions, checkBoard, reset, getIsOver, getCurrSymbol}
-})()
+    return {solutions, checkBoard, reset, getIsOver, getCurrSymbol, setCurrSymbol}
+})();
 
 // changes in the browser state of the game
 const displayController = (() => {
@@ -91,7 +97,9 @@ const displayController = (() => {
     console.log(cells);
     cells.forEach(cell => {
         cell.addEventListener('mouseover', (e) => {
-            e.target.textContent = gameController.getCurrSymbol();
+            if (!gameBoard.getField(e.target.dataset.value)) {
+                e.target.textContent = gameController.getCurrSymbol();
+            }
         });
 
         cell.addEventListener('mouseout', (e) => {
@@ -101,17 +109,23 @@ const displayController = (() => {
         });
 
         cell.addEventListener('click', e => {
-            e.target.textContent = gameController.getCurrSymbol();
-            lastClicked = e.target.dataset.value;
-            console.log(lastClicked);
-            gameBoard.setField(gameController.getCurrSymbol(), lastClicked)
-            gameBoard.printGrid();
+            if (!gameBoard.getField(e.target.dataset.value)) {
+                e.target.textContent = gameController.getCurrSymbol();
+                lastClicked = e.target.dataset.value;
+                console.log(lastClicked);
+                gameBoard.setField(gameController.getCurrSymbol(), lastClicked);
+                gameBoard.printGrid();
+                // gameController.checkBoard(gameController.getCurrSymbol());
+                gameController.setCurrSymbol(gameController.getCurrSymbol() === "X" ? "O" : "X");
+                changePlayerTurn();
+            }
         });
 
     });
     
     // Changing scoreboard and player turns
     const playerTurn = document.querySelector('.player-turn');
+    playerTurn.textContent = `${gameController.getCurrSymbol()}'s Turn`
     const changePlayerTurn = () => {
         playerTurn.textContent = `${gameController.getCurrSymbol()}'s Turn`
     };
