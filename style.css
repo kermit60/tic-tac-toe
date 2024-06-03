@@ -35,6 +35,9 @@ div {
     border-radius: 7px;
 }
 
+.cells[disabled] {
+    pointer-events: none;
+}
 
 .scoreboard {
     display: flex;

@@ -43,32 +43,31 @@ const gameBoard = (() => {
 
 // The working state of the game / main functions
 const gameController = (function() {
-    // let isOver = false;
 
     const playerX = Player("kermit", "X");
     const playerO = Player("ian", "O");
 
     let currentSymbol = playerX.getSymbol();
 
-    const solutions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8]
+    const solutions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8],
                        [0, 3, 6], [1, 4, 7], [2, 4, 6], [2, 5, 8]]
 
-    const checkBoard = (symbol) => {
+    // function for checking ties
 
-        for (let array in solutions) {
-            const win = array.reduce((prev, index) => {
-                return gameBoard.getField(index) === symbol && prev;
-            }, true);
+
+    const checkBoard = (symbol) => {
+        
+        for (let array of solutions) {
+            console.log(array);
+            const win = gameBoard.getField(array[0]) === symbol && 
+                        gameBoard.getField(array[1]) === symbol && 
+                        gameBoard.getField(array[2]) === symbol;
             if (win) {
-                // isOver = true;
-                console.log(symbol, "Won")
+                return true;
             }
         }
-        // console.log("No one has won yet")
-        // isOver = false;
+        return false;
     };
-
-    const getIsOver = () => isOver;
 
     const getCurrSymbol = () => currentSymbol;
     
@@ -77,14 +76,16 @@ const gameController = (function() {
     }; 
 
     const reset = () => {
+
         gameBoard.reset();
         displayController.resetDisplay();
-        currentSymbol = playerX.getSymbol()
-        // isOver = false;
+        displayController.enableCells();
+        currentSymbol = playerX.getSymbol();
+        
         gameBoard.printGrid();
     };
 
-    return {solutions, checkBoard, reset, getIsOver, getCurrSymbol, setCurrSymbol}
+    return {solutions, checkBoard, reset, getCurrSymbol, setCurrSymbol}
 })();
 
 // changes in the browser state of the game
@@ -115,13 +116,32 @@ const displayController = (() => {
                 console.log(lastClicked);
                 gameBoard.setField(gameController.getCurrSymbol(), lastClicked);
                 gameBoard.printGrid();
-                // gameController.checkBoard(gameController.getCurrSymbol());
-                gameController.setCurrSymbol(gameController.getCurrSymbol() === "X" ? "O" : "X");
                 changePlayerTurn();
+                // checking to see if gamestate is true, then there's a winner
+                const gameState = gameController.checkBoard(gameController.getCurrSymbol());
+                if (gameState) {
+                    disableCells();
+                    console.log(`${gameController.getCurrSymbol()} has won!`);
+                }
+                gameController.setCurrSymbol(gameController.getCurrSymbol() === "X" ? "O" : "X");
             }
         });
 
     });
+
+    // function for disabling all of the divs
+    const disableCells = () => {
+        cells.forEach(cell => {
+            cell.setAttribute('disabled', true);
+        });
+    };
+
+    // function for enabling all the divs
+    const enableCells = () => {
+        cells.forEach(cell => {
+            cell.removeAttribute('disabled');
+        });
+    };
     
     // Changing scoreboard and player turns
     const playerTurn = document.querySelector('.player-turn');
@@ -142,7 +162,7 @@ const displayController = (() => {
         gameController.reset();
     });
 
-    return {changePlayerTurn, resetDisplay}
+    return {changePlayerTurn, resetDisplay, disableCells, enableCells}
 
 })();
 
