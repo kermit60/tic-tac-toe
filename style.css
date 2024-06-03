@@ -28,10 +28,11 @@ div {
     grid-template-columns: repeat(3, 98px);
     grid-template-rows: repeat(3, 98px);
     justify-content: center;
+    gap: 20px;
 }
 
 .cells {
-    
+    border-radius: 7px;
 }
 
 

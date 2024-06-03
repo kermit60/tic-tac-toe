@@ -5,9 +5,9 @@ const Player = (name, symbol) => {
     this.symbol = symbol;
     const getName = () => name;
     const getSymbol = () => symbol;
-    const getInput = () => prompt("Input: ");
+    
 
-    return {getName, getSymbol, getInput};
+    return {getName, getSymbol};
 }
 
 // all the necessary functionalities and methods for Game to work
@@ -17,8 +17,9 @@ const gameBoard = (() =>{
     const setField = (symbol, position) => {
         if (grid[position] != null) {
             grid[position] = symbol;
+            return true;
         } else {
-            console.log("This position has already been occupied");
+            return false;
         }
     };
 
@@ -42,22 +43,14 @@ const gameBoard = (() =>{
 })()
 
 
-// The working state of the game
-const gameController = (function(){
-    let rounds = 1;
+// The working state of the game / main functions
+const gameController = (function() {
     let isOver = false;
 
-    const positions = {
-        "t-l": 0,
-        "t-m": 1, 
-        "t-r": 2,
-        "m-l": 3,
-        "m-m": 4, 
-        "m-r": 5, 
-        "b-l": 6,
-        "b-m": 7,
-        "b-r": 8
-    };
+    const playerX = Player("kermit", "X");
+    const playerO = Player("ian", "O");
+
+    let currentSymbol = playerX.getSymbol();
 
     const solutions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8]
                        [0, 3, 6], [1, 4, 7], [2, 4, 6], [2, 5, 8]]
@@ -78,24 +71,32 @@ const gameController = (function(){
 
     const getIsOver = () => isOver;
 
+    const getCurrSymbol = () => currentSymbol;
+
     const reset = () => {
-        rounds = 1;
         gameBoard.reset();
         isOver = false;
     };
 
-    return {positions, solutions, checkBoard, reset, getIsOver}
+    return {solutions, checkBoard, reset, getIsOver, getCurrSymbol}
 })()
 
 // changes in the browser state of the game
 const displayController = (() => {
+    
+    const cells = document.querySelectorAll(".cells");
 
-})()
+    console.log(cells);
+    cells.forEach(cell => {
+        cell.addEventListener('mouseover', (e) => {
+            e.target.textContent = gameController.getCurrSymbol();
+        });
 
-const player1 = Player(prompt("what's your name, player one?", "X"));
-const player2 = Player(prompt("what's your name, player one?", "O"));
+        cell.addEventListener('mouseout', (e) => {
+            e.target.textContent = "";
+        });
+    });
+    
 
-while (gameController.getIsOver() === false) {
-    player1.getInput()
-}
-console.log("Game over!")
+
+})();
