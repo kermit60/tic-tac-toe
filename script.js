@@ -11,7 +11,7 @@ const Player = (name, symbol) => {
 }
 
 // all the necessary functionalities and methods for Game to work
-const gameBoard = (() =>{
+const gameBoard = (() => {
     let grid = ['', '', '', '', '', '', '', '', ''];
 
     const setField = (symbol, position) => {
@@ -28,9 +28,7 @@ const gameBoard = (() =>{
     };
 
     const reset = () => {
-        grid.map(val => {
-            return null
-        });
+        grid = ['', '', '', '', '', '', '', '', ''];
     };
 
 
@@ -75,7 +73,9 @@ const gameController = (function() {
 
     const reset = () => {
         gameBoard.reset();
+        displayController.resetDisplay();
         isOver = false;
+        gameBoard.printGrid();
     };
 
     return {solutions, checkBoard, reset, getIsOver, getCurrSymbol}
@@ -83,7 +83,9 @@ const gameController = (function() {
 
 // changes in the browser state of the game
 const displayController = (() => {
-    
+    let lastClicked = 0;
+
+    // Changing the cells, adding to cells, 
     const cells = document.querySelectorAll(".cells");
 
     console.log(cells);
@@ -93,10 +95,40 @@ const displayController = (() => {
         });
 
         cell.addEventListener('mouseout', (e) => {
-            e.target.textContent = "";
+            if (!gameBoard.getField(e.target.dataset.value)) {
+                e.target.textContent = "";
+            }
         });
+
+        cell.addEventListener('click', e => {
+            e.target.textContent = gameController.getCurrSymbol();
+            lastClicked = e.target.dataset.value;
+            console.log(lastClicked);
+            gameBoard.setField(gameController.getCurrSymbol(), lastClicked)
+            gameBoard.printGrid();
+        });
+
     });
     
+    // Changing scoreboard and player turns
+    const playerTurn = document.querySelector('.player-turn');
+    const changePlayerTurn = () => {
+        playerTurn.textContent = `${gameController.getCurrSymbol()}'s Turn`
+    };
 
+    const resetDisplay = () => {
+        cells.forEach(cell => {
+            cell.textContent = "";
+        });
+    };
+
+    // reset button
+    const restartButton = document.querySelector('.restart');
+    restartButton.addEventListener('click', () => {
+        gameController.reset();
+    });
+
+    return {changePlayerTurn, resetDisplay}
 
 })();
+
