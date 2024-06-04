@@ -27,6 +27,8 @@ const gameBoard = (() => {
         return grid[position];
     };
 
+    const getGrid = () => grid;
+
     const reset = () => {
         grid = ['', '', '', '', '', '', '', '', ''];
     };
@@ -36,7 +38,7 @@ const gameBoard = (() => {
         console.log(grid);
     };
 
-    return {printGrid, setField, getField, reset};
+    return {printGrid, setField, getField, getGrid, reset};
 
 })()
 
@@ -53,7 +55,15 @@ const gameController = (function() {
                        [0, 3, 6], [1, 4, 7], [2, 4, 6], [2, 5, 8]]
 
     // function for checking ties
-
+    const gameTie = () => {
+        let count = 0;
+        for (let position of gameBoard.getGrid()) {
+            if (position === "") {
+                count += 1;
+            }
+        }
+        return count < 1;
+    }
 
     const checkBoard = (symbol) => {
         
@@ -85,7 +95,8 @@ const gameController = (function() {
         gameBoard.printGrid();
     };
 
-    return {solutions, checkBoard, reset, getCurrSymbol, setCurrSymbol}
+    return {solutions, checkBoard, reset, getCurrSymbol, setCurrSymbol, gameTie};
+
 })();
 
 // changes in the browser state of the game
@@ -122,7 +133,11 @@ const displayController = (() => {
                 if (gameState) {
                     disableCells();
                     console.log(`${gameController.getCurrSymbol()} has won!`);
+                } else if (gameController.gameTie()) {
+                    disableCells();
+                    console.log("Game is tied!")
                 }
+
                 gameController.setCurrSymbol(gameController.getCurrSymbol() === "X" ? "O" : "X");
             }
         });
