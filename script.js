@@ -42,6 +42,27 @@ const gameBoard = (() => {
 
 })()
 
+// Scoreboard factory function 
+const scoreboard = (() => {
+    let playerOWins = 0;
+    let playerXWins = 0;
+    let playerTies = 0;
+
+    const addPlayerO = () => ++playerOWins;
+    const addPlayerX = () => ++playerXWins;
+    const addPlayerTies = () => ++playerTies;
+    const getPlayerOScore = () => playerOWins;
+    const getPlayerXScore = () => playerXWins;
+    const getPlayerTies = () => playerTies;
+    const reset = () => {
+        playerOWins = 0;
+        playerXWins = 0;
+        playerTies = 0;
+    }
+
+    return {addPlayerO, addPlayerTies, addPlayerX, getPlayerOScore, 
+            getPlayerTies, getPlayerXScore, reset};
+})();
 
 // The working state of the game / main functions
 const gameController = (function() {
@@ -85,17 +106,30 @@ const gameController = (function() {
         currentSymbol = symbol;
     }; 
 
-    const reset = () => {
-
+    const round = () => {
         gameBoard.reset();
         displayController.resetDisplay();
         displayController.enableCells();
         currentSymbol = playerX.getSymbol();
-        
+
         gameBoard.printGrid();
     };
 
-    return {solutions, checkBoard, reset, getCurrSymbol, setCurrSymbol, gameTie};
+    const reset = () => {
+
+        gameBoard.reset();
+        scoreboard.reset();
+        displayController.resetDisplay();
+        displayController.enableCells();
+        currentSymbol = playerX.getSymbol();
+        displayController.changeOWins("");
+        displayController.changeTieWins("");
+        displayController.changeXWins("");
+        displayController.changePlayerTurn("X");
+        gameBoard.printGrid();
+    };
+
+    return {solutions, checkBoard, reset, round, getCurrSymbol, setCurrSymbol, gameTie};
 
 })();
 
@@ -105,6 +139,19 @@ const displayController = (() => {
 
     // Changing the cells, adding to cells, 
     const cells = document.querySelectorAll(".cells");
+    const prompt = document.querySelector("#prompt");
+    const quitButton = document.querySelector("#quit-button");
+    const nextRoundButton = document.querySelector("#nextrd-button");
+
+    quitButton.addEventListener("click", e => {
+        gameController.reset();
+        prompt.setAttribute('disabled', true);
+    });
+
+    nextRoundButton.addEventListener("click", e => {
+        gameController.round();
+        prompt.setAttribute('disabled', true);
+    });
 
     console.log(cells);
     cells.forEach(cell => {
@@ -131,18 +178,40 @@ const displayController = (() => {
                 // checking to see if gamestate is true, then there's a winner
                 const gameState = gameController.checkBoard(gameController.getCurrSymbol());
                 if (gameState) {
-                    disableCells();
                     console.log(`${gameController.getCurrSymbol()} has won!`);
+                    if (gameController.getCurrSymbol() === "X") {
+                        playRound("X");
+                        console.log("X WON!")
+                    } else {
+                        playRound("O");
+                        console.log("O WON!")
+                    }
                 } else if (gameController.gameTie()) {
-                    disableCells();
+                    playRound("tie")
                     console.log("Game is tied!")
                 }
-
+                
                 gameController.setCurrSymbol(gameController.getCurrSymbol() === "X" ? "O" : "X");
+                displayController.changePlayerTurn();
             }
         });
 
     });
+
+    const playRound = (roundWin) => {
+        disableCells();
+        if (roundWin === 'tie') {
+            scoreboard.addPlayerTies();
+            displayController.changeTieWins(scoreboard.getPlayerTies());
+        } else if (roundWin === 'X') {
+            scoreboard.addPlayerX();
+            displayController.changeXWins(scoreboard.getPlayerXScore());
+        } else {
+            scoreboard.addPlayerO();
+            displayController.changeOWins(scoreboard.getPlayerOScore());
+        }
+        prompt.removeAttribute("disabled");
+    }
 
     // function for disabling all of the divs
     const disableCells = () => {
@@ -171,13 +240,30 @@ const displayController = (() => {
         });
     };
 
+    const playerXWins = document.querySelector("#player-x-wins");
+    const playerOWins = document.querySelector("#player-o-wins");
+    const playerTies = document.querySelector("#player-ties");
+    const changeXWins = (numWins) => {
+        playerXWins.textContent = `Player X wins: ${numWins}`;
+    }
+
+    const changeOWins = (numWins) => {
+        playerOWins.textContent = `Player O wins: ${numWins}`;
+    }
+
+    const changeTieWins = (numWins) => {
+        playerTies.textContent = `Player Ties wins: ${numWins}`;
+    }
+
     // reset button
     const restartButton = document.querySelector('.restart');
     restartButton.addEventListener('click', () => {
         gameController.reset();
     });
 
-    return {changePlayerTurn, resetDisplay, disableCells, enableCells}
+    return {changePlayerTurn, resetDisplay, disableCells, enableCells, 
+            changeOWins, changeXWins, changeTieWins
+    }
 
 })();
 

@@ -39,6 +39,10 @@ div {
     pointer-events: none;
 }
 
+#prompt[disabled] {
+    display: none;
+}
+
 .scoreboard {
     display: flex;
     justify-content: center;
