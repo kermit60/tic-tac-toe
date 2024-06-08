@@ -157,19 +157,27 @@ const displayController = (() => {
     cells.forEach(cell => {
         cell.addEventListener('mouseover', (e) => {
             if (!gameBoard.getField(e.target.dataset.value)) {
-                e.target.textContent = gameController.getCurrSymbol();
+                if (gameController.getCurrSymbol() == "X") {
+                    cell.classList.add("x-icon");
+                } else {
+                    cell.classList.add("o-icon");
+                }
+                
             }
         });
 
         cell.addEventListener('mouseout', (e) => {
             if (!gameBoard.getField(e.target.dataset.value)) {
-                e.target.textContent = "";
+                if (gameController.getCurrSymbol() == "X") {
+                    cell.classList.remove("x-icon");
+                } else {
+                    cell.classList.remove("o-icon");
+                }
             }
         });
 
         cell.addEventListener('click', e => {
             if (!gameBoard.getField(e.target.dataset.value)) {
-                e.target.textContent = gameController.getCurrSymbol();
                 lastClicked = e.target.dataset.value;
                 console.log(lastClicked);
                 gameBoard.setField(gameController.getCurrSymbol(), lastClicked);
@@ -229,14 +237,23 @@ const displayController = (() => {
     
     // Changing scoreboard and player turns
     const playerTurn = document.querySelector('.player-turn');
-    playerTurn.textContent = `${gameController.getCurrSymbol()}'s Turn`
+    playerTurn.classList.add("x-small-icon");
+
     const changePlayerTurn = () => {
-        playerTurn.textContent = `${gameController.getCurrSymbol()}'s Turn`
+        if (gameController.getCurrSymbol() === "X") {
+            playerTurn.classList.remove('o-small-icon');
+            playerTurn.classList.add("x-small-icon");
+        } else {
+            playerTurn.classList.remove('x-small-icon');
+            playerTurn.classList.add("o-small-icon");
+        }
+        
     };
 
     const resetDisplay = () => {
         cells.forEach(cell => {
-            cell.textContent = "";
+            cell.classList.remove("x-icon");
+            cell.classList.remove("o-icon");
         });
     };
 

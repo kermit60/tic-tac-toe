@@ -22,7 +22,7 @@ body {
 }
 
 div {
-    border: solid 1px black;
+    /* border: solid 1px black; */
 }
 
 .container {
@@ -48,15 +48,33 @@ div {
 }
 
 .logo {
-    background: url(images/O.svg);
+    background: url(images/logo.svg) no-repeat center;
+    width: 75px;
 }
 
-#o-icon {
-    fill: aqua;
+.x-icon {
+    background: url(images/X.svg) no-repeat center var(--cell-bg-color);
 }
+
+.x-small-icon {
+    background: url(images/X.svg) no-repeat center var(--cell-bg-color) ;
+    background-size: 20%;
+    background-position: left 15px top 15px;
+}
+
+.o-small-icon {
+    background: url(images/O.svg) no-repeat center var(--cell-bg-color);
+    background-size: 20%;
+    background-position: left 15px top 15px;
+}
+
+.o-icon {
+    background: url(images/O.svg) no-repeat center var(--cell-bg-color);
+}
+
 
 .player-turn {
-    padding: 7px 15px;
+    padding: 7px 15px 7px 55px;
     font-size: 30px;
     border-radius: 7px;
 }
@@ -74,7 +92,6 @@ div {
     justify-content: center;
     align-items: center;
     border-radius: 7px;
-    
     border: var(--cell-outline-color) 2px solid;
 }
 
