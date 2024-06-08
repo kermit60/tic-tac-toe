@@ -122,9 +122,9 @@ const gameController = (function() {
         displayController.resetDisplay();
         displayController.enableCells();
         currentSymbol = playerX.getSymbol();
-        displayController.changeOWins("");
-        displayController.changeTieWins("");
-        displayController.changeXWins("");
+        displayController.changeOWins(0);
+        displayController.changeTieWins(0);
+        displayController.changeXWins(0);
         displayController.changePlayerTurn("X");
         gameBoard.printGrid();
     };
@@ -260,19 +260,20 @@ const displayController = (() => {
         playerTurn.classList.remove("o-small-icon");
     };
 
-    const playerXWins = document.querySelector("#player-x-wins");
-    const playerOWins = document.querySelector("#player-o-wins");
-    const playerTies = document.querySelector("#player-ties");
+    const playerXWins = document.querySelector("#player-x-wins > .score");
+    const playerOWins = document.querySelector("#player-o-wins > .score");
+    const playerTies = document.querySelector("#player-ties > .score");
+
     const changeXWins = (numWins) => {
-        playerXWins.textContent = `Player X wins: ${numWins}`;
+        playerXWins.textContent = numWins;
     }
 
     const changeOWins = (numWins) => {
-        playerOWins.textContent = `Player O wins: ${numWins}`;
+        playerOWins.textContent = numWins;
     }
 
     const changeTieWins = (numWins) => {
-        playerTies.textContent = `Player Ties wins: ${numWins}`;
+        playerTies.textContent = numWins;
     }
 
     // reset button

@@ -15,6 +15,7 @@
     --cell-outline-color: rgb(6, 99, 99);
     --scoreboard-color: rgb(209, 163, 88);
     --header-font-color: rgb(141, 196, 239);
+    --restart-button-color: rgb(31, 207, 31);
 }
 
 body {
@@ -75,6 +76,16 @@ body {
     border-radius: 7px;
 }
 
+.restart {
+    background: url(images/icon-restart.svg) no-repeat center;
+    background-color: var(--restart-button-color);
+    border-radius: 8px;
+    border: none;
+    min-width: 45px;
+    height: 45px;
+    align-self: center;
+}
+
 .game-container {
     display: grid;
     grid-template-columns: repeat(3, 98px);
@@ -112,6 +123,28 @@ body {
     min-height: 80px;
     min-width: 100px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 8px;
+    color: var(--main-bg-color);
+    padding: 0 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.score {
+    text-align: center;
+}
+
+#player-x-wins {
+    background-color: #ECFEEC;
+}
+
+#player-ties {
+    background-color: var(--scoreboard-color);
+}
+
+#player-o-wins {
+    background-color: #ECECFE;
 }
