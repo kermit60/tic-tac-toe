@@ -139,21 +139,25 @@ const displayController = (() => {
 
     // Changing the cells, adding to cells, 
     const cells = document.querySelectorAll(".cells");
+
+    // popup prompt 
     const prompt = document.querySelector("#prompt");
     const quitButton = document.querySelector(".quit-button");
     const nextRoundButton = document.querySelector("#round-button");
     const winner = document.querySelector(".winner");
-
+    const container = document.querySelector(".container");
     
 
     quitButton.addEventListener("click", e => {
         gameController.reset();
         prompt.setAttribute('disabled', true);
+        container.classList.remove("dim");
     });
 
     nextRoundButton.addEventListener("click", e => {
         gameController.round();
         prompt.setAttribute('disabled', true);
+        container.classList.remove("dim");
     });
 
     console.log(cells);
@@ -211,6 +215,7 @@ const displayController = (() => {
 
     const playRound = (roundWin) => {
         disableCells();
+        container.classList.add("dim");
         winner.classList.remove("x-prompt-icon");
         winner.classList.remove("o-prompt-icon");
         winner.classList.add("shift-padding");

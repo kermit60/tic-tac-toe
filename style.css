@@ -9,10 +9,6 @@
     
 }
 
-div {
-    border: 1px red solid;
-}
-
 :root {
     --main-bg-color: #16242b;
     --cell-bg-color: #1E3640;
@@ -29,6 +25,10 @@ body {
 .container {
     display: grid;
     gap: 12vh;
+}
+
+.dim {
+    opacity: 0.5;
 }
 
 .header {
