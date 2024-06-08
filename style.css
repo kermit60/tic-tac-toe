@@ -9,6 +9,10 @@
     
 }
 
+div {
+    border: 1px red solid;
+}
+
 :root {
     --main-bg-color: #16242b;
     --cell-bg-color: #1E3640;
@@ -49,26 +53,29 @@ body {
     width: 75px;
 }
 
-.x-icon {
+.x-icon,
+.x-small-icon,
+.x-prompt-icon {
     background: url(images/X.svg) no-repeat center var(--cell-bg-color);
 }
 
-.x-small-icon {
-    background: url(images/X.svg) no-repeat center var(--cell-bg-color) ;
-    background-size: 20%;
-    background-position: left 15px top 15px;
+.o-icon,
+.o-small-icon,
+.o-prompt-icon {
+    background: url(images/O.svg) no-repeat center var(--cell-bg-color);
 }
 
+.x-small-icon,
 .o-small-icon {
-    background: url(images/O.svg) no-repeat center var(--cell-bg-color);
     background-size: 20%;
     background-position: left 15px top 15px;
 }
 
-.o-icon {
-    background: url(images/O.svg) no-repeat center var(--cell-bg-color);
+.o-prompt-icon,
+.x-prompt-icon {
+    background-position: left 15px center;
+    background-size: 10%;
 }
-
 
 .player-turn {
     padding: 7px 15px 7px 55px;
@@ -135,6 +142,8 @@ body {
 
 .score {
     text-align: center;
+    font-size: 24px;
+    font-weight: 600;
 }
 
 #player-x-wins {
@@ -147,4 +156,49 @@ body {
 
 #player-o-wins {
     background-color: #ECECFE;
+}
+
+
+#prompt {
+    display: grid;
+    justify-items: center;
+    gap: 15px;
+    padding: 50px 0;
+    min-height: 250px;
+    width: 100%;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #ECECFE;
+    background-color: var(--cell-bg-color);
+}
+
+#prompt > h3 {
+    font-size: 30px;
+    font-weight: 400;
+    
+}
+
+#prompt .winner {
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.shift-padding {
+    padding-left: 65px;
+}
+
+.button-group {
+    display: flex;
+    gap: 20px;
+    color: var(--cell-bg-color);
+}
+
+#round-button {
+    border-radius: 7px;
+    border: none;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 16px;
 }

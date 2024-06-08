@@ -140,8 +140,11 @@ const displayController = (() => {
     // Changing the cells, adding to cells, 
     const cells = document.querySelectorAll(".cells");
     const prompt = document.querySelector("#prompt");
-    const quitButton = document.querySelector("#quit-button");
-    const nextRoundButton = document.querySelector("#nextrd-button");
+    const quitButton = document.querySelector(".quit-button");
+    const nextRoundButton = document.querySelector("#round-button");
+    const winner = document.querySelector(".winner");
+
+    
 
     quitButton.addEventListener("click", e => {
         gameController.reset();
@@ -208,15 +211,24 @@ const displayController = (() => {
 
     const playRound = (roundWin) => {
         disableCells();
+        winner.classList.remove("x-prompt-icon");
+        winner.classList.remove("o-prompt-icon");
+        winner.classList.add("shift-padding");
         if (roundWin === 'tie') {
             scoreboard.addPlayerTies();
             displayController.changeTieWins(scoreboard.getPlayerTies());
+            winner.textContent = "IT'S A TIE!";
+            winner.classList.remove("shift-padding");
         } else if (roundWin === 'X') {
             scoreboard.addPlayerX();
             displayController.changeXWins(scoreboard.getPlayerXScore());
+            winner.classList.add("x-prompt-icon");
+            winner.textContent = "TAKES THE ROUND!"
         } else {
             scoreboard.addPlayerO();
             displayController.changeOWins(scoreboard.getPlayerOScore());
+            winner.classList.add("o-prompt-icon");
+            winner.textContent = "TAKES THE ROUND!"
         }
         prompt.removeAttribute("disabled");
     }
@@ -281,6 +293,7 @@ const displayController = (() => {
     restartButton.addEventListener('click', () => {
         gameController.reset();
     });
+
 
     return {changePlayerTurn, resetDisplay, disableCells, enableCells, 
             changeOWins, changeXWins, changeTieWins
