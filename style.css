@@ -21,10 +21,6 @@ body {
     background-color: var(--main-bg-color);
 }
 
-div {
-    /* border: solid 1px black; */
-}
-
 .container {
     display: grid;
     gap: 12vh;

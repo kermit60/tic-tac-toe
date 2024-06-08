@@ -239,7 +239,7 @@ const displayController = (() => {
     const playerTurn = document.querySelector('.player-turn');
     playerTurn.classList.add("x-small-icon");
 
-    const changePlayerTurn = () => {
+    const changePlayerTurn = (symbol) => {
         if (gameController.getCurrSymbol() === "X") {
             playerTurn.classList.remove('o-small-icon');
             playerTurn.classList.add("x-small-icon");
@@ -254,7 +254,10 @@ const displayController = (() => {
         cells.forEach(cell => {
             cell.classList.remove("x-icon");
             cell.classList.remove("o-icon");
+            
         });
+        playerTurn.classList.add("x-small-icon");
+        playerTurn.classList.remove("o-small-icon");
     };
 
     const playerXWins = document.querySelector("#player-x-wins");
